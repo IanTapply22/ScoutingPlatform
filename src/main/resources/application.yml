@@ -1,0 +1,21 @@
+### Configuration file! ##
+
+stats-debug: false
+firebase-storage-type: firestore
+firebase-realtime-url: "https://DATABASE_NAME.firebaseio.com"
+firebase-credentials-location: "src/main/resources/firebaseCredentials.json"
+
+## Data Storage Configurations ##
+autosave-delay:
+storage-type:
+
+## Authentication Configuration ##
+admin-authentication-type: none
+private-authentication-type: none
+global-authentication-type: none
+
+# Basic Authentication Configuration #
+client:
+  admin:
+    id:
+    secret:
