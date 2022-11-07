@@ -1,13 +1,14 @@
 ### Configuration file! ##
 
-stats-debug: false
-firebase-storage-type: firestore
+stats-debug: true
+firebase-storage-type: realtime
 firebase-realtime-url: "https://DATABASE_NAME.firebaseio.com"
 firebase-credentials-location: "src/main/resources/firebaseCredentials.json"
 
 ## Data Storage Configurations ##
-autosave-delay:
-storage-type:
+
+# Firestore #
+firestore-data-collection: "scoutingData"
 
 ## Authentication Configuration ##
 admin-authentication-type: none

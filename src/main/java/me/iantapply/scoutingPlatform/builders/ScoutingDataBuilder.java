@@ -10,9 +10,9 @@ import me.iantapply.scoutingPlatform.enums.TournamentType;
 public class ScoutingDataBuilder {
 
     // Miscellaneous
-    private String firebaseDocumentId;
-    private String userId;
-    private Integer teamId;
+    private String firebaseDocumentID;
+    private String userID;
+    private Integer teamID;
     private String date;
     private TournamentType tournamentType;
     private Integer matchNumber;

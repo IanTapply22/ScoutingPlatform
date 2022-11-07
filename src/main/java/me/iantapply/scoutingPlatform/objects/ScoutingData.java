@@ -1,5 +1,6 @@
 package me.iantapply.scoutingPlatform.objects;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import me.iantapply.scoutingPlatform.enums.MoveInAuto;
@@ -11,8 +12,8 @@ public class ScoutingData {
     /**
      * Will use UUID most likely for userID
      */
-    @Getter @Setter String userId;
-    @Getter @Setter Integer teamId;
+    @Getter @Setter String userID;
+    @Getter @Setter Integer teamID;
     @Getter @Setter String date;
     @Getter @Setter TournamentType tournamentType;
     @Getter @Setter Integer matchNumber;

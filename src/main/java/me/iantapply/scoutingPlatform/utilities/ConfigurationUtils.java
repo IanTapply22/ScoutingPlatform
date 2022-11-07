@@ -2,7 +2,6 @@ package me.iantapply.scoutingPlatform.utilities;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 
 @org.springframework.context.annotation.Configuration
 public class ConfigurationUtils {
@@ -28,6 +27,13 @@ public class ConfigurationUtils {
     // Realtime database url
     @Value("${firebase-realtime-url}")
     @Getter private String realtimeDatabaseURL;
+
+
+    /**
+     * Database options
+     */
+    @Value("${firestore-data-collection}")
+    @Getter private String firestoreDataCollection;
 
 
     /**
