@@ -60,14 +60,12 @@ public class NewFirebaseService {
 
     public static List<ScoutingDataBuilder> getScoutingDataForTeam(Integer teamID) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        // Create a reference to the cities collection
-        CollectionReference scoutingData = dbFirestore.collection("scoutingData");
-// Create a query against the collection.
+
+        CollectionReference scoutingData = dbFirestore.collection(configurationUtils.getFirestoreDataCollection());
         Query query = scoutingData.whereEqualTo("teamID", teamID);
-// retrieve  query results asynchronously using query.get()
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-        List<ScoutingDataBuilder> result = null;
+        List<ScoutingDataBuilder> result;
         result = querySnapshot.get().getDocuments().parallelStream()
                 .map(scoutingData2 -> {
                     final var scoutingDataDocument = scoutingData2.toObject(ScoutingData.class);
