@@ -1,20 +1,21 @@
 package me.iantapply.scoutingPlatform.utilities;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
+@PropertySource("classpath:application.yml")
 @org.springframework.context.annotation.Configuration
 public class ConfigurationUtils {
 
-    public static void checkForDebug(String callType, String endpoint) {
-        if (ConfigurationUtils.getDebug()) {
-            System.out.println("Call type: " + callType + " for endpoint: /" + endpoint + "/ has been successfully made!");
-        }
-    }
+    /**
+     * Lombok getters for config options
+     */
 
     // Debug option
     @Value("${stats-debug}")
-    @Getter public static Boolean debug;
+    @Getter private Boolean debug;
 
     // Service account key location
     @Value("${firebase-credentials-location}")
@@ -32,8 +33,9 @@ public class ConfigurationUtils {
     /**
      * Database options
      */
-    @Value("${firestore-data-collection}")
-    @Getter private String firestoreDataCollection;
+    @Value("${firebase-data-collection}")
+    @Getter @Setter
+    private String firestoreDataCollection;
 
 
     /**
@@ -59,4 +61,14 @@ public class ConfigurationUtils {
     // Admin API authentication type
     @Value("${admin-authentication-type}")
     @Getter private String adminAuth;
+
+    /**
+     * Temporary fix for options (will fix in future ASAP)
+     */
+
+    public void checkForDebug(String callType, String endpoint) {
+        if (this.debug) {
+            System.out.println("Call type: " + callType + " for endpoint: /" + endpoint + "/ has been successfully made!");
+        }
+    }
 }

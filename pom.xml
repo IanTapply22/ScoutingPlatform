@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>me.iantapply</groupId>
-	<artifactId>1114-Stats-API</artifactId>
+	<artifactId>ScoutingPlatformAPI</artifactId>
 	<version>1.0.0</version>
-	<name>1114-Stats-API</name>
-	<description>A REST API that tracks stats such as amount of wins, total points, and more! Utilizes Spring Boot implemented with Java. </description>
+	<name>ScoutingPlatformAPI</name>
+	<description>A REST API used to create, update, and delete scouting data collected from FRC events and competitions.</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
