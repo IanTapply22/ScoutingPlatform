@@ -23,6 +23,7 @@ public class PublicAPINew {
      * GET scouting data calls
      */
 
+    // Get all data
     @GetMapping(path="/scoutingData")
     public List<ScoutingDataBuilder> allScoutingData() throws ExecutionException, InterruptedException {
 
@@ -30,6 +31,7 @@ public class PublicAPINew {
         return NewFirebaseService.getAllScoutingData();
     }
 
+    // Get all for team
     @GetMapping(path="/scoutingData", params = { "teamID" })
     public List<ScoutingDataBuilder> allScoutingDataForTeam(@RequestParam Integer teamID) throws ExecutionException, InterruptedException {
 
@@ -37,6 +39,7 @@ public class PublicAPINew {
         return NewFirebaseService.getScoutingDataForTeam(teamID);
     }
 
+    // Get all for team on date
     @GetMapping(path="/scoutingData", params = { "teamID", "date" })
     public ScoutingData allScoutingDataFromTeamAndYear(@RequestParam Integer teamID, @RequestParam String date) throws ExecutionException, InterruptedException {
 
@@ -44,7 +47,8 @@ public class PublicAPINew {
         return NewFirebaseService.getScoutingDataFromTeamAndYear(teamID, date);
     }
 
-    @GetMapping(path="/scoutingData", params = { "date "})
+    // Get all for date
+    @GetMapping(path="/scoutingData", params = { "date" })
     public ScoutingData allScoutingDataFromYear(@RequestParam String date) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("GET", "scoutingData" + date);

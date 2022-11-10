@@ -95,7 +95,7 @@ public class NewFirebaseService {
 
     public static String saveScoutingData(ScoutingData scoutingData) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(configurationUtils.getFirestoreDataCollection()).document(scoutingData.getTeamID() + "-" + scoutingData.getDate() + "-" + scoutingData.getMatchNumber()).set(scoutingData);
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(configurationUtils.getFirestoreDataCollection() + "/" + scoutingData.getTeamID()).document(scoutingData.getTeamID() + "-" + scoutingData.getDate() + "-" + scoutingData.getMatchNumber()).set(scoutingData);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
