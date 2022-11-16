@@ -1,12 +1,11 @@
-package me.iantapply.scoutingPlatform.objects;
+package me.iantapply.scoutingPlatform.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import me.iantapply.scoutingPlatform.enums.MoveInAuto;
 import me.iantapply.scoutingPlatform.enums.TournamentType;
 
-public class ScoutingData {
+public class ScoutingDataDTO {
 
     // Get and set the values provided
     /**
@@ -29,7 +28,7 @@ public class ScoutingData {
     @Getter @Setter Integer climbLevel;
     @Getter @Setter Integer climbTime;
 
-    public ScoutingData() {
+    public ScoutingDataDTO() {
         super();
     }
 }

@@ -5,7 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.database.DatabaseReference;
 import me.iantapply.scoutingPlatform.builders.ScoutingDataBuilder;
-import me.iantapply.scoutingPlatform.objects.ScoutingData;
+import me.iantapply.scoutingPlatform.dto.ScoutingDataDTO;
 import me.iantapply.scoutingPlatform.utilities.ConfigurationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class NewFirebaseService {
                 try {
                     result = dbFirestore.collection(configurationUtils.getFirestoreDataCollection()).get().get().getDocuments().parallelStream()
                             .map(scoutingData -> {
-                                final var scoutingDataDocument = scoutingData.toObject(ScoutingData.class);
+                                final var scoutingDataDocument = scoutingData.toObject(ScoutingDataDTO.class);
                                 return ScoutingDataBuilder.builder().firebaseDocumentID(scoutingData.getId()).userID(scoutingDataDocument.getUserID())
                                         .teamID(scoutingDataDocument.getTeamID()).date(scoutingDataDocument.getDate()).tournamentType(scoutingDataDocument.getTournamentType())
                                         .matchNumber(scoutingDataDocument.getMatchNumber()).moveInAuto(scoutingDataDocument.getMoveInAuto())
@@ -68,7 +68,7 @@ public class NewFirebaseService {
         List<ScoutingDataBuilder> result;
         result = querySnapshot.get().getDocuments().parallelStream()
                 .map(scoutingData2 -> {
-                    final var scoutingDataDocument = scoutingData2.toObject(ScoutingData.class);
+                    final var scoutingDataDocument = scoutingData2.toObject(ScoutingDataDTO.class);
                     return ScoutingDataBuilder.builder().firebaseDocumentID(scoutingData2.getId()).userID(scoutingDataDocument.getUserID())
                             .teamID(scoutingDataDocument.getTeamID()).date(scoutingDataDocument.getDate()).tournamentType(scoutingDataDocument.getTournamentType())
                             .matchNumber(scoutingDataDocument.getMatchNumber()).moveInAuto(scoutingDataDocument.getMoveInAuto())
@@ -80,11 +80,11 @@ public class NewFirebaseService {
         return result;
     }
 
-    public static ScoutingData getScoutingDataFromTeamAndYear(Integer teamID, String date) throws ExecutionException, InterruptedException {
+    public static ScoutingDataDTO getScoutingDataFromTeamAndYear(Integer teamID, String date) throws ExecutionException, InterruptedException {
         return null;
     }
 
-    public static ScoutingData getAllScoutingDataFromYear(String date) throws ExecutionException, InterruptedException {
+    public static ScoutingDataDTO getAllScoutingDataFromYear(String date) throws ExecutionException, InterruptedException {
         return null;
     }
 
@@ -93,9 +93,9 @@ public class NewFirebaseService {
      * POST, PATCH, DELETE, and PUT (create, update, delete, and replace)
      */
 
-    public static String saveScoutingData(ScoutingData scoutingData) throws ExecutionException, InterruptedException {
+    public static String saveScoutingData(ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(configurationUtils.getFirestoreDataCollection() + "/" + scoutingData.getTeamID()).document(scoutingData.getTeamID() + "-" + scoutingData.getDate() + "-" + scoutingData.getMatchNumber()).set(scoutingData);
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(configurationUtils.getFirestoreDataCollection() + "/" + scoutingDataDTO.getTeamID()).document(scoutingDataDTO.getTeamID() + "-" + scoutingDataDTO.getDate() + "-" + scoutingDataDTO.getMatchNumber()).set(scoutingDataDTO);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
