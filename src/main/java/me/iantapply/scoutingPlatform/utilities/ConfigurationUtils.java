@@ -37,31 +37,6 @@ public class ConfigurationUtils {
     @Getter @Setter
     private String firestoreDataCollection;
 
-
-    /**
-     * Basic authentication config values
-     */
-    // Admin basic authentication details
-    // Admin ID
-    @Value("${client.admin.id}")
-    @Getter private String id;
-
-    // Admin Secret
-    @Value("${client.admin.secret}")
-    @Getter private String secret;
-
-
-    /**
-     * Authentication config values
-     */
-    // Private API authentication type
-    @Value("${private-authentication-type}")
-    @Getter private String privateAuth;
-
-    // Admin API authentication type
-    @Value("${admin-authentication-type}")
-    @Getter private String adminAuth;
-
     /**
      * Temporary fix for options (will fix in future ASAP)
      */

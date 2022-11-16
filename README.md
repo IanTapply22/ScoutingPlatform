@@ -3,16 +3,16 @@ An API used for ease of use when creating scouting data for FRC competitions. Co
 
 ## API Calls
 
-GET www.example.com/scoutingData <br>
+GET www.example.com/scoutingDataDTO <br>
 Result: All scouting data from the collection set in application.yml file.
 
-GET www.example.com/scoutingData?teamID= <br>
+GET www.example.com/scoutingDataDTO?teamID= <br>
 Result: All scouting data for the specified teamID.
 
-GET www.example.com/scoutingData?teamID=&date= <br>
+GET www.example.com/scoutingDataDTO?teamID=&date= <br>
 Result: All scouting data created for the specified team on a specific date.
 
-GET www.example.com/scoutingData?date= <br>
+GET www.example.com/scoutingDataDTO?date= <br>
 Result: All scouting data created on the date specified (includes every team).
 
 ## Notes

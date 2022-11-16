@@ -1,9 +1,8 @@
 package me.iantapply.scoutingPlatform.newAPI;
 
-import me.iantapply.scoutingPlatform.objects.ScoutingData;
+import me.iantapply.scoutingPlatform.dto.ScoutingDataDTO;
 import me.iantapply.scoutingPlatform.services.NewFirebaseService;
 import me.iantapply.scoutingPlatform.utilities.ConfigurationUtils;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +23,10 @@ public class PrivateAPINew {
 
     // Create data
     @PostMapping(path="/scoutingData")
-    public ResponseEntity<String> createScoutingData(@RequestBody ScoutingData scoutingData) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> createScoutingData(@RequestBody ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("POST", "/scoutingData");
-        return ResponseEntity.ok(NewFirebaseService.saveScoutingData(scoutingData));
+        return ResponseEntity.ok(NewFirebaseService.saveScoutingData(scoutingDataDTO));
     }
 
 
@@ -37,10 +36,10 @@ public class PrivateAPINew {
 
     // Update data
     @PatchMapping(path="/scoutingData")
-    public ResponseEntity<String> updateScoutingData(@RequestBody ScoutingData scoutingData) throws ExecutionException, InterruptedException {
+    public ResponseEntity<String> updateScoutingData(@RequestBody ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("PATCH", "/scoutingData");
-        return ResponseEntity.ok(NewFirebaseService.saveScoutingData(scoutingData));
+        return ResponseEntity.ok(NewFirebaseService.saveScoutingData(scoutingDataDTO));
     }
 
 
