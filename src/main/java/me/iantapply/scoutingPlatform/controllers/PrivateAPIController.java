@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@RequestMapping("/scoutingPlatform")
 public class PrivateAPIController {
 
     private final ConfigurationUtils configurationUtils;
@@ -22,10 +23,10 @@ public class PrivateAPIController {
      */
 
     // Create data
-    @PostMapping(path="/scoutingData")
+    @PostMapping()
     public ResponseEntity<String> createScoutingData(@RequestBody ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
 
-        configurationUtils.checkForDebug("POST", "/scoutingData");
+        configurationUtils.checkForDebug("POST", "/scoutingPlatform");
         return ResponseEntity.ok(FirebaseService.saveScoutingData(scoutingDataDTO));
     }
 
@@ -35,10 +36,10 @@ public class PrivateAPIController {
      */
 
     // Update data
-    @PatchMapping(path="/scoutingData")
+    @PatchMapping()
     public ResponseEntity<String> updateScoutingData(@RequestBody ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
 
-        configurationUtils.checkForDebug("PATCH", "/scoutingData");
+        configurationUtils.checkForDebug("PATCH", "/scoutingPlatform");
         return ResponseEntity.ok(FirebaseService.saveScoutingData(scoutingDataDTO));
     }
 
@@ -48,42 +49,42 @@ public class PrivateAPIController {
      */
 
     // Delete data for team on a specific date
-    @DeleteMapping(path="/scoutingData", params = { "teamID", "date" })
+    @DeleteMapping(params = { "teamID", "date" })
     public ResponseEntity<String> deleteScoutingDataTeamAndDate(@RequestParam Integer teamID, @RequestParam String date) {
 
-        configurationUtils.checkForDebug("DELETE", "/scoutingData?teamID=" + teamID + "&date=" + date);
+        configurationUtils.checkForDebug("DELETE", "/scoutingPlatform?teamID=" + teamID + "&date=" + date);
         return ResponseEntity.ok(FirebaseService.deleteScoutingData(teamID, date));
     }
 
     // Delete data for a specific match for a team on a specific day
-    @DeleteMapping(path="/scoutingData", params = { "teamID", "date", "match" })
+    @DeleteMapping(params = { "teamID", "date", "match" })
     public ResponseEntity<String> deleteScoutingDataTeamDateAndMatch(@RequestParam Integer teamID, @RequestParam String date, @RequestParam Integer match) {
 
-        configurationUtils.checkForDebug("DELETE", "/scoutingData?teamID=" + teamID + "&date=" + date + "&match=" + match);
+        configurationUtils.checkForDebug("DELETE", "/scoutingPlatform?teamID=" + teamID + "&date=" + date + "&match=" + match);
         return ResponseEntity.ok(FirebaseService.deleteScoutingData(teamID, date, match));
     }
 
     // Delete all data for every team (will add more auth for this)
-    @DeleteMapping(path="/scoutingData")
+    @DeleteMapping()
     public ResponseEntity<String> deleteAllScoutingData() {
 
-        configurationUtils.checkForDebug("DELETE", "/scoutingData");
+        configurationUtils.checkForDebug("DELETE", "/scoutingPlatform");
         return ResponseEntity.ok(FirebaseService.deleteAllScoutingData());
     }
 
     // Delete all data that was made on a specific day
-    @DeleteMapping(path="/scoutingData", params = { "date" })
+    @DeleteMapping(params = { "date" })
     public ResponseEntity<String> deleteAllScoutingDataForDate(@RequestParam String date) {
 
-        configurationUtils.checkForDebug("DELETE", "/scoutingData?date=" + date);
+        configurationUtils.checkForDebug("DELETE", "/scoutingPlatform?date=" + date);
         return ResponseEntity.ok(FirebaseService.deleteAllScoutingData(date));
     }
 
     // Delete all scouting data for a team
-    @DeleteMapping(path="/scoutingData", params = { "teamID" })
+    @DeleteMapping(params = { "teamID" })
     public ResponseEntity<String> deleteAllScoutingDataForTeam(@RequestParam Integer teamID) {
 
-        configurationUtils.checkForDebug("DELETE", "/scoutingData?teamID=" + teamID);
+        configurationUtils.checkForDebug("DELETE", "/scoutingPlatform?teamID=" + teamID);
         return ResponseEntity.ok(FirebaseService.deleteAllScoutingData(teamID));
     }
 }

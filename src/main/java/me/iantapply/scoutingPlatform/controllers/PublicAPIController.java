@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@RequestMapping("/scoutingPlatform")
 public class PublicAPIController {
 
     private final ConfigurationUtils configurationUtils;
@@ -22,34 +23,34 @@ public class PublicAPIController {
      */
 
     // Get all data
-    @GetMapping(path="/scoutingData")
+    @GetMapping()
     public List<ScoutingDataBuilder> allScoutingData() throws ExecutionException, InterruptedException {
 
-        configurationUtils.checkForDebug("GET", "scoutingData");
+        configurationUtils.checkForDebug("GET", "scoutingPlatform");
         return FirebaseService.getAllScoutingData();
     }
 
     // Get all for team
-    @GetMapping(path="/scoutingData", params = { "teamID" })
+    @GetMapping(params = { "teamID" })
     public List<ScoutingDataBuilder> allScoutingDataForTeam(@RequestParam Integer teamID) throws ExecutionException, InterruptedException {
 
-        configurationUtils.checkForDebug("GET", "scoutingData" + teamID);
+        configurationUtils.checkForDebug("GET", "scoutingPlatform" + teamID);
         return FirebaseService.getScoutingDataForTeam(teamID);
     }
 
     // Get all for team on date
-    @GetMapping(path="/scoutingData", params = { "teamID", "date" })
+    @GetMapping(params = { "teamID", "date" })
     public ScoutingDataDTO allScoutingDataFromTeamAndYear(@RequestParam Integer teamID, @RequestParam String date) throws ExecutionException, InterruptedException {
 
-        configurationUtils.checkForDebug("GET", "scoutingData" + teamID + "/" + date);
+        configurationUtils.checkForDebug("GET", "scoutingPlatform" + teamID + "/" + date);
         return FirebaseService.getScoutingDataFromTeamAndYear(teamID, date);
     }
 
     // Get all for date
-    @GetMapping(path="/scoutingData", params = { "date" })
+    @GetMapping(params = { "date" })
     public ScoutingDataDTO allScoutingDataFromYear(@RequestParam String date) throws ExecutionException, InterruptedException {
 
-        configurationUtils.checkForDebug("GET", "scoutingData" + date);
+        configurationUtils.checkForDebug("GET", "scoutingPlatform" + date);
         return FirebaseService.getAllScoutingDataFromYear(date);
     }
 }
