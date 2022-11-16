@@ -1,8 +1,8 @@
-package me.iantapply.scoutingPlatform.newAPI;
+package me.iantapply.scoutingPlatform.controllers;
 
 import me.iantapply.scoutingPlatform.builders.ScoutingDataBuilder;
 import me.iantapply.scoutingPlatform.dto.ScoutingDataDTO;
-import me.iantapply.scoutingPlatform.services.NewFirebaseService;
+import me.iantapply.scoutingPlatform.services.FirebaseService;
 import me.iantapply.scoutingPlatform.utilities.ConfigurationUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-public class PublicAPINew {
+public class PublicAPIController {
 
     private final ConfigurationUtils configurationUtils;
-    public PublicAPINew(ConfigurationUtils configurationUtils) {
+    public PublicAPIController(ConfigurationUtils configurationUtils) {
         this.configurationUtils = configurationUtils;
     }
 
@@ -26,7 +26,7 @@ public class PublicAPINew {
     public List<ScoutingDataBuilder> allScoutingData() throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("GET", "scoutingData");
-        return NewFirebaseService.getAllScoutingData();
+        return FirebaseService.getAllScoutingData();
     }
 
     // Get all for team
@@ -34,7 +34,7 @@ public class PublicAPINew {
     public List<ScoutingDataBuilder> allScoutingDataForTeam(@RequestParam Integer teamID) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("GET", "scoutingData" + teamID);
-        return NewFirebaseService.getScoutingDataForTeam(teamID);
+        return FirebaseService.getScoutingDataForTeam(teamID);
     }
 
     // Get all for team on date
@@ -42,7 +42,7 @@ public class PublicAPINew {
     public ScoutingDataDTO allScoutingDataFromTeamAndYear(@RequestParam Integer teamID, @RequestParam String date) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("GET", "scoutingData" + teamID + "/" + date);
-        return NewFirebaseService.getScoutingDataFromTeamAndYear(teamID, date);
+        return FirebaseService.getScoutingDataFromTeamAndYear(teamID, date);
     }
 
     // Get all for date
@@ -50,6 +50,6 @@ public class PublicAPINew {
     public ScoutingDataDTO allScoutingDataFromYear(@RequestParam String date) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("GET", "scoutingData" + date);
-        return NewFirebaseService.getAllScoutingDataFromYear(date);
+        return FirebaseService.getAllScoutingDataFromYear(date);
     }
 }

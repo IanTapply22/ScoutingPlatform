@@ -1,7 +1,7 @@
-package me.iantapply.scoutingPlatform.newAPI;
+package me.iantapply.scoutingPlatform.controllers;
 
 import me.iantapply.scoutingPlatform.dto.ScoutingDataDTO;
-import me.iantapply.scoutingPlatform.services.NewFirebaseService;
+import me.iantapply.scoutingPlatform.services.FirebaseService;
 import me.iantapply.scoutingPlatform.utilities.ConfigurationUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-public class PrivateAPINew {
+public class PrivateAPIController {
 
     private final ConfigurationUtils configurationUtils;
-    public PrivateAPINew(ConfigurationUtils configurationUtils) {
+    public PrivateAPIController(ConfigurationUtils configurationUtils) {
         this.configurationUtils = configurationUtils;
     }
 
@@ -26,7 +26,7 @@ public class PrivateAPINew {
     public ResponseEntity<String> createScoutingData(@RequestBody ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("POST", "/scoutingData");
-        return ResponseEntity.ok(NewFirebaseService.saveScoutingData(scoutingDataDTO));
+        return ResponseEntity.ok(FirebaseService.saveScoutingData(scoutingDataDTO));
     }
 
 
@@ -39,7 +39,7 @@ public class PrivateAPINew {
     public ResponseEntity<String> updateScoutingData(@RequestBody ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
 
         configurationUtils.checkForDebug("PATCH", "/scoutingData");
-        return ResponseEntity.ok(NewFirebaseService.saveScoutingData(scoutingDataDTO));
+        return ResponseEntity.ok(FirebaseService.saveScoutingData(scoutingDataDTO));
     }
 
 
@@ -52,7 +52,7 @@ public class PrivateAPINew {
     public ResponseEntity<String> deleteScoutingDataTeamAndDate(@RequestParam Integer teamID, @RequestParam String date) {
 
         configurationUtils.checkForDebug("DELETE", "/scoutingData?teamID=" + teamID + "&date=" + date);
-        return ResponseEntity.ok(NewFirebaseService.deleteScoutingData(teamID, date));
+        return ResponseEntity.ok(FirebaseService.deleteScoutingData(teamID, date));
     }
 
     // Delete data for a specific match for a team on a specific day
@@ -60,7 +60,7 @@ public class PrivateAPINew {
     public ResponseEntity<String> deleteScoutingDataTeamDateAndMatch(@RequestParam Integer teamID, @RequestParam String date, @RequestParam Integer match) {
 
         configurationUtils.checkForDebug("DELETE", "/scoutingData?teamID=" + teamID + "&date=" + date + "&match=" + match);
-        return ResponseEntity.ok(NewFirebaseService.deleteScoutingData(teamID, date, match));
+        return ResponseEntity.ok(FirebaseService.deleteScoutingData(teamID, date, match));
     }
 
     // Delete all data for every team (will add more auth for this)
@@ -68,7 +68,7 @@ public class PrivateAPINew {
     public ResponseEntity<String> deleteAllScoutingData() {
 
         configurationUtils.checkForDebug("DELETE", "/scoutingData");
-        return ResponseEntity.ok(NewFirebaseService.deleteAllScoutingData());
+        return ResponseEntity.ok(FirebaseService.deleteAllScoutingData());
     }
 
     // Delete all data that was made on a specific day
@@ -76,7 +76,7 @@ public class PrivateAPINew {
     public ResponseEntity<String> deleteAllScoutingDataForDate(@RequestParam String date) {
 
         configurationUtils.checkForDebug("DELETE", "/scoutingData?date=" + date);
-        return ResponseEntity.ok(NewFirebaseService.deleteAllScoutingData(date));
+        return ResponseEntity.ok(FirebaseService.deleteAllScoutingData(date));
     }
 
     // Delete all scouting data for a team
@@ -84,6 +84,6 @@ public class PrivateAPINew {
     public ResponseEntity<String> deleteAllScoutingDataForTeam(@RequestParam Integer teamID) {
 
         configurationUtils.checkForDebug("DELETE", "/scoutingData?teamID=" + teamID);
-        return ResponseEntity.ok(NewFirebaseService.deleteAllScoutingData(teamID));
+        return ResponseEntity.ok(FirebaseService.deleteAllScoutingData(teamID));
     }
 }
