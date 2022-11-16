@@ -1,4 +1,4 @@
-package me.iantapply.scoutingPlatform.API;
+package me.iantapply.scoutingPlatform.controllers;
 
 
 import io.swagger.annotations.*;

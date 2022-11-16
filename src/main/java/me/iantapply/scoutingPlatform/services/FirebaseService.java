@@ -1,130 +1,126 @@
 package me.iantapply.scoutingPlatform.services;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.database.DatabaseReference;
+import me.iantapply.scoutingPlatform.builders.ScoutingDataBuilder;
+import me.iantapply.scoutingPlatform.dto.ScoutingDataDTO;
+import me.iantapply.scoutingPlatform.utilities.ConfigurationUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+@Service
 public class FirebaseService {
 
+    private static ConfigurationUtils configurationUtils = null;
+    public FirebaseService(ConfigurationUtils configurationUtils) {
+        FirebaseService.configurationUtils = configurationUtils;
+    }
+
+    private static DatabaseReference mDatabase;
+
     /**
-     *
-     * @param year the year to get the information from
-     * @return information on the specific team from the specific year
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * GET scouting data methods (public)
      */
-    /*
-    public static TeamStats getTeamStatsInformation(Integer teamID, Integer year) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference documentReference = dbFirestore.collection("stats").document(teamID + "-" + year);
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
 
-        DocumentSnapshot document = future.get();
+    public static List<ScoutingDataBuilder> getAllScoutingData() throws ExecutionException, InterruptedException {
+        List<ScoutingDataBuilder> result = null;
+        switch (configurationUtils.getStorageType()) {
+            case ("firestore"):
+                Firestore dbFirestore = FirestoreClient.getFirestore();
+                try {
+                    result = dbFirestore.collection(configurationUtils.getFirestoreDataCollection()).get().get().getDocuments().parallelStream()
+                            .map(scoutingData -> {
+                                final var scoutingDataDocument = scoutingData.toObject(ScoutingDataDTO.class);
+                                return ScoutingDataBuilder.builder().firebaseDocumentID(scoutingData.getId()).userID(scoutingDataDocument.getUserID())
+                                        .teamID(scoutingDataDocument.getTeamID()).date(scoutingDataDocument.getDate()).tournamentType(scoutingDataDocument.getTournamentType())
+                                        .matchNumber(scoutingDataDocument.getMatchNumber()).moveInAuto(scoutingDataDocument.getMoveInAuto())
+                                        .autoHighMade(scoutingDataDocument.getAutoHighMade()).autoHighMissed(scoutingDataDocument.getAutoHighMissed()).autoLowMade(scoutingDataDocument.getAutoLowMade())
+                                        .autoLowMissed(scoutingDataDocument.getAutoLowMissed()).teleopHighMade(scoutingDataDocument.getTeleopHighMade()).teleopHighMissed(scoutingDataDocument.getTeleopHighMissed())
+                                        .teleopLowMade(scoutingDataDocument.getTeleopLowMade()).climbLevel(scoutingDataDocument.getClimbLevel()).climbTime(scoutingDataDocument.getClimbTime()).build();
+                            }).collect(Collectors.toList());
+                } catch (InterruptedException | ExecutionException e) {
+                    System.out.println("Unable to retrieve all teams from collection: " + configurationUtils.getFirestoreDataCollection());
+                    throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED);
+                }
+                break;
 
-        TeamStats teamStats = null;
-
-        if (document.exists()) {
-            teamStats = document.toObject(TeamStats.class);
-            return teamStats;
-        } else {
-            return null;
+            case ("realtime"):
+                break;
         }
+
+        return result;
     }
 
-    public static Team getTeamInformation(Integer teamID) throws ExecutionException, InterruptedException {
+    public static List<ScoutingDataBuilder> getScoutingDataForTeam(Integer teamID) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference documentReference = dbFirestore.collection("teams").document(String.valueOf(teamID));
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
 
-        DocumentSnapshot document = future.get();
+        CollectionReference scoutingData = dbFirestore.collection(configurationUtils.getFirestoreDataCollection());
+        Query query = scoutingData.whereEqualTo("teamID", teamID);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
-        Team team = null;
+        List<ScoutingDataBuilder> result;
+        result = querySnapshot.get().getDocuments().parallelStream()
+                .map(scoutingData2 -> {
+                    final var scoutingDataDocument = scoutingData2.toObject(ScoutingDataDTO.class);
+                    return ScoutingDataBuilder.builder().firebaseDocumentID(scoutingData2.getId()).userID(scoutingDataDocument.getUserID())
+                            .teamID(scoutingDataDocument.getTeamID()).date(scoutingDataDocument.getDate()).tournamentType(scoutingDataDocument.getTournamentType())
+                            .matchNumber(scoutingDataDocument.getMatchNumber()).moveInAuto(scoutingDataDocument.getMoveInAuto())
+                            .autoHighMade(scoutingDataDocument.getAutoHighMade()).autoHighMissed(scoutingDataDocument.getAutoHighMissed()).autoLowMade(scoutingDataDocument.getAutoLowMade())
+                            .autoLowMissed(scoutingDataDocument.getAutoLowMissed()).teleopHighMade(scoutingDataDocument.getTeleopHighMade()).teleopHighMissed(scoutingDataDocument.getTeleopHighMissed())
+                            .teleopLowMade(scoutingDataDocument.getTeleopLowMade()).climbLevel(scoutingDataDocument.getClimbLevel()).climbTime(scoutingDataDocument.getClimbTime()).build();
+                }).collect(Collectors.toList());
 
-        if (document.exists()) {
-            team = document.toObject(Team.class);
-            return team;
-        } else {
-            return null;
-        }
+        return result;
     }
 
-    public static List<TeamBuilder> getAllTeams() {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        try {
-            return dbFirestore.collection("teams").get().get().getDocuments().parallelStream()
-                    .map(team -> {
-                        final var teamDocument = team.toObject(Team.class);
-                        return TeamBuilder.builder().id(team.getId()).city(teamDocument.getCity()).district(teamDocument.getDistrict())
-                                .rookieYear(teamDocument.getRookieYear()).school(teamDocument.getSchool()).teamID(teamDocument.getTeamID())
-                                .teamName(teamDocument.getTeamName()).website(teamDocument.getWebsite())
-                                .build();
-                    }).collect(Collectors.toList());
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Unable to retrieve all teams from database: teams");
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED);
-        }
+    public static ScoutingDataDTO getScoutingDataFromTeamAndYear(Integer teamID, String date) throws ExecutionException, InterruptedException {
+        return null;
     }
 
-    public static List<TeamStatsBuilder> getAllTeamStats() {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        try {
-            return dbFirestore.collection("stats").get().get().getDocuments().parallelStream()
-                    .map(teamStats -> {
-                        final var teamDocument = teamStats.toObject(TeamStats.class);
-                        return TeamStatsBuilder.builder().id(teamStats.getId()).district(teamDocument.getDistrict()).ranked(teamDocument.getRanked())
-                                .teamID(teamDocument.getTeamID()).teamName(teamDocument.getTeamName()).totalPoints(teamDocument.getTotalPoints())
-                                .year(teamDocument.getYear())
-                                .build();
-                    }).collect(Collectors.toList());
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Unable to retrieve all teams from database: stats");
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED);
-        }
+    public static ScoutingDataDTO getAllScoutingDataFromYear(String date) throws ExecutionException, InterruptedException {
+        return null;
     }
 
-    public static String createTeamStatsByYear(TeamStats teamStats) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsAPIFuture = dbFirestore.collection("stats").document(teamStats.getTeamID() + "-" + teamStats.getYear()).set(teamStats);
-        return collectionsAPIFuture.get().getUpdateTime().toString();
-    }
 
-    public static String createTeam(Team team) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsAPIFuture = dbFirestore.collection("teams").document(String.valueOf(team.getTeamID())).set(team);
-        return collectionsAPIFuture.get().getUpdateTime().toString();
-    }
+    /**
+     * POST, PATCH, DELETE, and PUT (create, update, delete, and replace)
+     */
 
-    public static String deleteTeamStats(Integer teamID, Integer year) {
+    public static String saveScoutingData(ScoutingDataDTO scoutingDataDTO) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> writeResult = dbFirestore.collection("stats").document(teamID + "-" + year).delete();
-        return "Stats with ID " + teamID + " and year " + year + " has been deleted!";
-    }
-
-    public static String deleteTeam(Integer teamID) {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> writeResult = dbFirestore.collection("teams").document(String.valueOf(teamID)).delete();
-        return "Team with ID " + teamID + " has been deleted!";
-    }
-
-    public static String updateStats(TeamStats teamStats) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("stats").document(teamStats.getTeamID() + "-" + teamStats.getYear()).set(teamStats);
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(configurationUtils.getFirestoreDataCollection() + "/" + scoutingDataDTO.getTeamID()).document(scoutingDataDTO.getTeamID() + "-" + scoutingDataDTO.getDate() + "-" + scoutingDataDTO.getMatchNumber()).set(scoutingDataDTO);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
-    public static String updateTeam(Team team) throws ExecutionException, InterruptedException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("teams").document(String.valueOf(team.getTeamID())).set(team);
-        return collectionsApiFuture.get().getUpdateTime().toString();
+    public static String deleteScoutingData(Integer teamID, String date) {
+        return null;
     }
-    */
 
+    public static String deleteScoutingData(Integer teamID, String date, Integer match) {
+        return null;
+    }
+
+
+    /**
+     * DELETE all scouting data methods
+     */
+
+    public static String deleteAllScoutingData() {
+        return null;
+    }
+
+    public static String deleteAllScoutingData(String date) {
+        return null;
+    }
+
+    public static String deleteAllScoutingData(Integer teamID) {
+        return null;
+    }
 }
